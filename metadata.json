@@ -1,0 +1,6 @@
+{
+  "name": "SAHAYA — Bengaluru Smart Transit & Journey Planner",
+  "description": "Smart Infrastructure BMTC bus route planner, stop explorer, and multimodal transit comparison for Bengaluru commuters by Team HexaForce.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
