@@ -128,7 +128,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight text-balance">
-                Bengaluru journeys, made simpler.
+                Find the place. Choose the smarter way.
               </h1>
 
               <p className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed">

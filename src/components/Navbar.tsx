@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { ActivePage } from '../types';
 import { useRealGps } from '../context/GpsContext';
-import { MapPin, Menu, X, Compass, Route, LocateFixed, Radio } from 'lucide-react';
+import { MapPin, Menu, X, Compass, Route, LocateFixed, Radio, Share2, Check } from 'lucide-react';
 
 interface NavbarProps {
   activePage: ActivePage;
@@ -20,7 +20,29 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPitchGuide,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { position, status: gpsStatus, requestRealGps } = useRealGps();
+
+  const handleCopyLink = async () => {
+    const url = window.location.href || 'https://ais-pre-r3u7ddqujpvsnz5vkkhtag-800967173275.asia-northeast1.run.app';
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
 
   const navItems: { id: ActivePage; label: string }[] = [
     { id: 'home', label: 'Home' },
@@ -110,6 +132,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               type="button"
+              onClick={handleCopyLink}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+                copied
+                  ? 'bg-emerald-600/30 text-emerald-300 border-emerald-500/50'
+                  : 'text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700/90 border-slate-700'
+              }`}
+              title="Copy link to this website"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5 text-teal-400" />}
+              <span>{copied ? 'Link Copied!' : 'Copy Link'}</span>
+            </button>
+
+            <button
+              type="button"
               onClick={onOpenPitchGuide}
               className="px-3.5 py-2 text-xs font-semibold text-slate-900 bg-teal-400 hover:bg-teal-300 rounded-lg shadow-xs transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5"
             >
@@ -160,7 +196,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             );
           })}
-          <div className="pt-2">
+          <div className="pt-2 space-y-2">
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className={`w-full flex items-center justify-center gap-2 py-2 px-4 text-xs font-semibold rounded-lg border transition-colors ${
+                copied
+                  ? 'bg-emerald-600/30 text-emerald-300 border-emerald-500/50'
+                  : 'text-slate-300 bg-slate-800 hover:bg-slate-700 border-slate-700'
+              }`}
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-teal-400" />}
+              <span>{copied ? 'Link Copied to Clipboard!' : 'Copy Website Link'}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => {

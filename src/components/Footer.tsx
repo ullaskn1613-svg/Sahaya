@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivePage } from '../types';
-import { MapPin, ShieldAlert, Award } from 'lucide-react';
+import { MapPin, ShieldAlert, Award, Share2, Check } from 'lucide-react';
 
 interface FooterProps {
   setActivePage: (page: ActivePage) => void;
@@ -13,6 +13,28 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ setActivePage, onOpenFeedback }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = async () => {
+    const url = window.location.href || 'https://ais-pre-r3u7ddqujpvsnz5vkkhtag-800967173275.asia-northeast1.run.app';
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
   return (
     <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 text-sm mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -109,7 +131,20 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, onOpenFeedback })
               <div>Prajwal · Team HexaForce</div>
               <div>Yeshwanth · Team HexaForce</div>
             </div>
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md border transition-colors ${
+                  copied
+                    ? 'bg-emerald-600/30 text-emerald-300 border-emerald-500/50'
+                    : 'text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border-slate-700'
+                }`}
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5 text-teal-400" />}
+                <span>{copied ? 'Link Copied to Clipboard!' : 'Copy Website Link'}</span>
+              </button>
+
               <button
                 type="button"
                 onClick={onOpenFeedback}
